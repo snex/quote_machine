@@ -25,7 +25,6 @@ module Paint
     end
 
     quote_wrap_size = draw_width / 8
-    puts quote_wrap_size
     wrapped_quote = quote.scan(/\S.{0,#{quote_wrap_size}}\S(?=\s|$)|\S+/).join("\n")
     draw = Magick::Draw.new
     draw.annotate(img, draw_width, draw_height, draw_left, draw_top + 10, wrapped_quote) {
