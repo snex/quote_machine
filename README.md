@@ -20,3 +20,6 @@ This will spin up a [Sinatra](http://www.sinatrarb.com/) server that you can hit
 http://localhost:4567/
 
 From there, just paste the URL of a celebrity image, select the quote type you want, and watch the magic happen!
+
+## Notes
+Since Alchemy's free version has a strict rate limit, I am only grabbing the first quote for a given celebrity no matter what. To score the full list of quotes and properly sort on them, uncomment https://github.com/snex/quote_machine/blob/master/brainy_quote.rb#L15
