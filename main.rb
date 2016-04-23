@@ -48,7 +48,8 @@ post '/quote' do
       quotes_scores << [quote, score]
     end
 
-    quotes_scores.reject! { |qs| qs[1].nil? }.sort_by! { |qs| qs[1] }
+    quotes_scores.reject! { |qs| qs[1].nil? }
+    quotes_scores.sort_by! { |qs| qs[1] }
 
     if params['quote_type'] == 'best'
       quote_to_use = quotes_scores.last[0]
