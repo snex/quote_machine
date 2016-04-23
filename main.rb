@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/flash'
 require 'httpi'
 require 'json'
 
@@ -7,6 +8,8 @@ require_relative 'brainy_quote'
 require_relative 'alchemy'
 require_relative 'paint'
 
+enable :sessions
+
 get '/' do
   erb :index
 end
@@ -14,7 +17,10 @@ end
 post '/quote' do
   res = JSON.parse(Microsoft::analyze_image(params['image']))
   celebs = []
-  return res.inspect if res['categories'].nil?
+  if res['categories'].nil?
+    flash[:error] = res.inspect
+    redirect '/' and return
+  end
   res['categories'].each do |category|
     if category.has_key?('detail') && category['detail'].has_key?('celebrities')
       category['detail']['celebrities'].each do |celeb|
@@ -23,13 +29,13 @@ post '/quote' do
     end
   end
   if celebs.empty?
-    @error = 'No celebrities detected.'
+    flash[:error] = 'No celebrities detected.'
     redirect '/' and return
   end
   celeb = celebs.sort_by { |c| c['confidence'] }.last
   quotes = BrainyQuote::brainy_quotes(celeb['name'])
   if quotes.empty?
-    @error = "No quotes found for #{celeb['name']}."
+    flash[:error] = "No quotes found for #{celeb['name']}."
     redirect '/' and return
   end
 
